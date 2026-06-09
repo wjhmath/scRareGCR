@@ -14,3 +14,7 @@ output/
 *.log
 __pycache__/
 .ipynb_checkpoints/
+scagcr_env
+data
+log/
+results/
