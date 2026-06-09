@@ -1,8 +1,0 @@
-============================================================
-scRareGCR — GSE194122_BMMC
-============================================================
-  cells=20000 genes=2000 k=45 rare=11119
-  best_ep=11 test_ari=0.2936
-  ARI=0.2929 NMI=0.6975 ACC=0.4476
-  F1=0.7246 Prec=0.5752 Rec=0.9790 MCC=0.1624 G-mean=0.3047
-  Saved to /home/liyang/BioJiaheWang/RARECELL/benchmark/results/real/scRareGCR/GSE194122_BMMC/ (1526s)

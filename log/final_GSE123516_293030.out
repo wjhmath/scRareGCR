@@ -1,7 +1,0 @@
-============================================================
-scRareGCR — GSE123516
-============================================================
-  cells=18000 genes=2000 k=4 rare=?
-  best_ep=7 test_ari=0.4432
-  ARI=0.4389 NMI=0.5102 ACC=0.5152
-  Saved to /home/liyang/BioJiaheWang/RARECELL/benchmark/results/real/scRareGCR/GSE123516/ (911s)

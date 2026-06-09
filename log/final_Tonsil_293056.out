@@ -1,8 +1,0 @@
-============================================================
-scRareGCR — Tonsil
-============================================================
-  cells=5778 genes=2000 k=13 rare=1274
-  best_ep=10 test_ari=0.7135
-  ARI=0.7202 NMI=0.7200 ACC=0.7825
-  F1=0.8487 Prec=0.9549 Rec=0.7637 MCC=0.8197 G-mean=0.8694
-  Saved to /home/liyang/BioJiaheWang/RARECELL/benchmark/results/real/scRareGCR/Tonsil/ (653s)

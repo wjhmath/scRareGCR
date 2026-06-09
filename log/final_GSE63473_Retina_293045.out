@@ -1,7 +1,0 @@
-============================================================
-scRareGCR — GSE63473_Retina
-============================================================
-  cells=20000 genes=2000 k=7 rare=?
-  best_ep=22 test_ari=0.0172
-  ARI=0.0139 NMI=0.0156 ACC=0.1850
-  Saved to /home/liyang/BioJiaheWang/RARECELL/benchmark/results/real/scRareGCR/GSE63473_Retina/ (1004s)

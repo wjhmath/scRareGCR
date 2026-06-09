@@ -1,8 +1,0 @@
-============================================================
-scRareGCR — 10X_PBMC
-============================================================
-  cells=4271 genes=2000 k=8 rare=135
-  best_ep=33 test_ari=0.7552
-  ARI=0.7564 NMI=0.7711 ACC=0.8164
-  F1=0.7742 Prec=0.6857 Rec=0.8889 MCC=0.7728 G-mean=0.9365
-  Saved to /home/liyang/BioJiaheWang/RARECELL/benchmark/results/real/scRareGCR/10X_PBMC/ (1650s)

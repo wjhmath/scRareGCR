@@ -1,8 +1,0 @@
-============================================================
-scRareGCR — Crohn
-============================================================
-  cells=20000 genes=2000 k=27 rare=4905
-  best_ep=17 test_ari=0.4852
-  ARI=0.4220 NMI=0.6738 ACC=0.5325
-  F1=0.6343 Prec=0.5132 Rec=0.8302 MCC=0.5050 G-mean=0.7860
-  Saved to /home/liyang/BioJiaheWang/RARECELL/benchmark/results/real/scRareGCR/Crohn/ (1217s)

@@ -1,8 +1,0 @@
-============================================================
-scRareGCR — GSE93374
-============================================================
-  cells=20000 genes=2000 k=37 rare=7063
-  best_ep=17 test_ari=0.2388
-  ARI=0.1776 NMI=0.6592 ACC=0.4288
-  F1=0.6306 Prec=0.4734 Rec=0.9441 MCC=0.3883 G-mean=0.6347
-  Saved to /home/liyang/BioJiaheWang/RARECELL/benchmark/results/real/scRareGCR/GSE93374/ (4272s)
