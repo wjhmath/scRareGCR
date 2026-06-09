@@ -1,0 +1,8 @@
+============================================================
+scRareGCR — Goolam
+============================================================
+  cells=124 genes=2000 k=8 rare=16
+  best_ep=0 test_ari=0.4872
+  ARI=0.4248 NMI=0.6788 ACC=0.5161
+  F1=0.0000 Prec=0.0000 Rec=0.0000 MCC=-0.0868 G-mean=0.0000
+  Saved to /home/liyang/BioJiaheWang/RARECELL/benchmark/results/real/scRareGCR/Goolam/ (15s)

@@ -86,7 +86,8 @@ def sim(z1, z2, hidden_norm):
     return torch.mm(z1, z2.T)
 
 
-def cl_loss(z, z_aug, adj, tau, hidden_norm=True):
+# ===== 替换点3: density-aware contrastive =====
+def cl_loss(z, z_aug, adj, tau, hidden_norm=True, rare_weight=None):
     f = lambda x: torch.exp(x / tau)
     intra_view_sim = f(sim(z, z, hidden_norm))
     inter_view_sim = f(sim(z, z_aug, hidden_norm))
@@ -94,22 +95,58 @@ def cl_loss(z, z_aug, adj, tau, hidden_norm=True):
     loss = positive / (intra_view_sim.sum(1) + inter_view_sim.sum(1) - intra_view_sim.diag())
     adj_count = torch.sum(adj, 1) * 2 + 1
     loss = torch.log(loss) / adj_count
+    if rare_weight is not None:
+        return -torch.sum(rare_weight * loss) / (rare_weight.sum() + 1e-12)
     return -torch.mean(loss, 0)
 
 
-def final_cl_loss(alpha1, alpha2, z, z_aug, adj, adj_aug, tau, hidden_norm=True):
-    return alpha1 * cl_loss(z, z_aug, adj, tau, hidden_norm) + alpha2 * cl_loss(z_aug, z, adj_aug, tau, hidden_norm)
+def final_cl_loss(alpha1, alpha2, z, z_aug, adj, adj_aug, tau, hidden_norm=True, rare_weight=None):
+    return (alpha1 * cl_loss(z, z_aug, adj, tau, hidden_norm, rare_weight)
+            + alpha2 * cl_loss(z_aug, z, adj_aug, tau, hidden_norm, rare_weight))
 
 
-def target_distribution(q):
-    weight = q ** 2 / torch.sum(q, dim=0, keepdim=True)
+# ===== 替换点1: frequency-debiased target distribution =====
+def target_distribution(q, gamma=1.0):
+    f = torch.sum(q, dim=0, keepdim=True)
+    weight = q ** 2 / (f ** gamma + 1e-12)
     return (weight.t() / torch.sum(weight, dim=1, keepdim=True).t()).t()
 
+
+
+
+# ===== OT 均衡正则 (Sinkhorn optimal transport) =====
+def sinkhorn_loss(z, centers, epsilon=0.05, sinkhorn_iters=3, tau=0.1):
+    """最优运输聚类正则: 质量守恒约束防止稀有簇被清空"""
+    cost = torch.cdist(z, centers)
+    Q = torch.exp(-cost / epsilon)
+    Q = Q / (Q.sum() + 1e-12)
+    for _ in range(sinkhorn_iters):
+        Q = Q / (Q.sum(dim=0, keepdim=True) + 1e-12)
+        Q = Q / (Q.sum(dim=1, keepdim=True) + 1e-12)
+    log_p = F.log_softmax(-cost / tau, dim=1)
+    return -torch.mean(torch.sum(Q.detach() * log_p, dim=1))
+
+
+# ===== ZINB 异常度计算 (per-cell NLL) =====
+def zinb_nll_per_cell(x, mean, disp, pi, scale_factor):
+    """每个细胞的 ZINB 负对数似然, 用于异常反馈权重"""
+    eps = 1e-10
+    sf = scale_factor.unsqueeze(1)
+    mean = mean * sf
+    t1 = torch.lgamma(disp + eps) + torch.lgamma(x + 1.0) - torch.lgamma(x + disp + eps)
+    t2 = (disp + x) * torch.log(1.0 + (mean / (disp + eps))) + (x * (torch.log(disp + eps) - torch.log(mean + eps)))
+    nb_final = t1 + t2
+    nb_case = nb_final - torch.log(1.0 - pi + eps)
+    zero_nb = torch.pow(disp / (disp + mean + eps), disp)
+    zero_case = -torch.log(pi + ((1.0 - pi) * zero_nb) + eps)
+    result = torch.where(torch.le(x, 1e-8), zero_case, nb_case)
+    return result.mean(dim=1)  # per-cell mean across genes
 
 class Model(nn.Module):
     def __init__(self, input_dim, graph_head, phi, gcn_dim, mlp_dim,
                  prob_feature, prob_edge, tau, alpha, beta, dropout,
-                 n_clusters, cluster_alpha=1.0, use_graph=True):
+                 n_clusters, cluster_alpha=1.0, use_graph=True,
+                 gamma_debias=1.5, rare_beta=1.0):
         super(Model, self).__init__()
         self.use_graph = use_graph
         self.prob_feature = prob_feature
@@ -118,6 +155,8 @@ class Model(nn.Module):
         self.alpha = alpha
         self.beta = beta
         self.cluster_alpha = cluster_alpha
+        self.gamma_debias = gamma_debias
+        self.rare_beta = rare_beta
         self.graphconstructor = GraphConstructor(input_dim, graph_head, phi, dropout=0)
         self.transformer = TransformerConv(input_dim, gcn_dim, heads=4, concat=False, dropout=dropout)
         self.w_imp = nn.Linear(gcn_dim, input_dim)
@@ -154,17 +193,27 @@ class Model(nn.Module):
         if self.use_graph and trans_attn is not None and edge_index_out.shape[1] > 0:
             B = x.shape[0]
             trans_attn_mat = torch.zeros(B, B, device=device)
-            trans_attn_mat[edge_index_out[0], edge_index_out[1]] = trans_attn.squeeze()
+            trans_attn_mat[edge_index_out[0], edge_index_out[1]] = trans_attn.mean(dim=-1) if trans_attn.dim() > 1 else trans_attn.squeeze()
             refined_attn = torch.sigmoid(self.alpha_refine) * trans_attn_mat + (1 - torch.sigmoid(self.alpha_refine)) * attn_init
             refined_attn = torch.sigmoid(refined_attn)
             adj_refined = torch.where(refined_attn >= self.graphconstructor.phi, torch.ones_like(refined_attn), torch.zeros_like(refined_attn))
             adj = adj_refined - torch.diag_embed(adj_refined.diag())
+
+        # ===== 替换点3: density-aware rare weight =====
+        with torch.no_grad():
+            deg = adj.sum(1)
+            w = 1.0 / (deg + 1.0)
+            w = w / (w.mean() + 1e-12)
+            w = w ** self.rare_beta
+            rare_weight = w.detach()
+
         x_imp = self.w_imp(z)
         z_mlp = self.mlp(z)
         z_mlp_aug = self.mlp(z_aug)
-        loss_cl = final_cl_loss(self.alpha, self.beta, z_mlp, z_mlp_aug, adj, adj_aug, self.tau, hidden_norm=True)
+        loss_cl = final_cl_loss(self.alpha, self.beta, z_mlp, z_mlp_aug, adj, adj_aug,
+                                self.tau, hidden_norm=True, rare_weight=rare_weight)
         q = self.soft_assign(z)
-        p = target_distribution(q).detach()
+        p = target_distribution(q, self.gamma_debias).detach()
         loss_cluster = F.kl_div(torch.log(q + 1e-8), p, reduction='batchmean')
         h = self.decoder_hidden(z)
         mean = self.dec_mean(h)

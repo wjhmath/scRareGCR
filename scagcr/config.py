@@ -17,4 +17,10 @@ config = {
     'pretrain_epochs': 20,
     'seed': 1,
     'epochs': 200,
+    'gamma_debias': 1.5,
+    'rare_beta': 0.5,
+    'lambda_ot': 0.1,
+    'zinb_clamp_lo': 0.7,
+    'zinb_clamp_hi': 2.0,
+    'rare_threshold': 0.05,
 }

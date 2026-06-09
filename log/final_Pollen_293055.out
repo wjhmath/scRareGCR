@@ -1,0 +1,8 @@
+============================================================
+scRareGCR — Pollen
+============================================================
+  cells=301 genes=2000 k=11 rare=23
+  best_ep=176 test_ari=0.8645
+  ARI=0.9391 NMI=0.9341 ACC=0.9236
+  F1=0.0000 Prec=0.0000 Rec=0.0000 MCC=-0.0410 G-mean=0.0000
+  Saved to /home/liyang/BioJiaheWang/RARECELL/benchmark/results/real/scRareGCR/Pollen/ (24s)

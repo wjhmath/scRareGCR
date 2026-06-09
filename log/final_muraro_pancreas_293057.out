@@ -1,0 +1,8 @@
+============================================================
+scRareGCR — muraro_pancreas
+============================================================
+  cells=2118 genes=2000 k=9 rare=200
+  best_ep=7 test_ari=0.9190
+  ARI=0.9229 NMI=0.8837 ACC=0.9160
+  F1=0.6111 Prec=0.7984 Rec=0.4950 MCC=0.6003 G-mean=0.6990
+  Saved to /home/liyang/BioJiaheWang/RARECELL/benchmark/results/real/scRareGCR/muraro_pancreas/ (86s)

@@ -1,0 +1,7 @@
+============================================================
+scRareGCR — GSE148339
+============================================================
+  cells=16714 genes=2000 k=4 rare=?
+  best_ep=26 test_ari=0.3355
+  ARI=0.3361 NMI=0.3767 ACC=0.5148
+  Saved to /home/liyang/BioJiaheWang/RARECELL/benchmark/results/real/scRareGCR/GSE148339/ (791s)

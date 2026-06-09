@@ -1,0 +1,8 @@
+============================================================
+scRareGCR — GSE119531
+============================================================
+  cells=6147 genes=2000 k=17 rare=1309
+  best_ep=11 test_ari=0.6484
+  ARI=0.5946 NMI=0.7517 ACC=0.7078
+  F1=0.3445 Prec=0.3079 Rec=0.3911 MCC=0.1412 G-mean=0.5460
+  Saved to /home/liyang/BioJiaheWang/RARECELL/benchmark/results/real/scRareGCR/GSE119531/ (709s)

@@ -1,0 +1,8 @@
+============================================================
+scRareGCR — 68kPBMC
+============================================================
+  cells=20000 genes=2000 k=11 rare=3236
+  best_ep=15 test_ari=0.4491
+  ARI=0.4344 NMI=0.5809 ACC=0.6221
+  F1=0.6172 Prec=0.9911 Rec=0.4481 MCC=0.6326 G-mean=0.6691
+  Saved to /home/liyang/BioJiaheWang/RARECELL/benchmark/results/real/scRareGCR/68kPBMC/ (4537s)

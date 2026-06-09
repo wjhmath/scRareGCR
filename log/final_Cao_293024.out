@@ -1,0 +1,8 @@
+============================================================
+scRareGCR — Cao
+============================================================
+  cells=4186 genes=2000 k=10 rare=70
+  best_ep=20 test_ari=0.4915
+  ARI=0.4117 NMI=0.6898 ACC=0.6916
+  F1=0.0000 Prec=0.0000 Rec=0.0000 MCC=-0.0350 G-mean=0.0000
+  Saved to /home/liyang/BioJiaheWang/RARECELL/benchmark/results/real/scRareGCR/Cao/ (594s)

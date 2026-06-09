@@ -1,0 +1,8 @@
+============================================================
+scRareGCR — PBMC3k
+============================================================
+  cells=2638 genes=2000 k=9 rare=52
+  best_ep=40 test_ari=0.6735
+  ARI=0.5663 NMI=0.7215 ACC=0.6732
+  F1=0.4478 Prec=1.0000 Rec=0.2885 MCC=0.5333 G-mean=0.5371
+  Saved to /home/liyang/BioJiaheWang/RARECELL/benchmark/results/real/scRareGCR/PBMC3k/ (188s)

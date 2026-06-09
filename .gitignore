@@ -1,29 +1,16 @@
-# 环境 (绝不上传)
-scagcr_env/
-envs/
-conda_pkgs/
-# 数据与结果 (太大 / 可再生)
-data/
-results/
-paper_figures/
-generated_figures/
-log/
-_archive_scratch/
-# 大二进制 / 中间产物
-*.pt
-*.pth
 *.h5ad
 *.h5
-*.npz
+*.rds
+*.mtx
+*.csv
+*.tsv
+*.loom
 *.npy
-*.pdf
-*.png
-*.jpg
-*.svg
-# python 缓存
+*.pt
+*.pth
+data/
+results/
+output/
+*.log
 __pycache__/
-*.pyc
 .ipynb_checkpoints/
-.DS_Store
-baselines/repos/
-baselines/repos/

@@ -1,0 +1,8 @@
+============================================================
+scRareGCR — GSE194122_Bench3
+============================================================
+  cells=20000 genes=2000 k=42 rare=10394
+  best_ep=16 test_ari=0.2647
+  ARI=0.2129 NMI=0.6687 ACC=0.3983
+  F1=0.6908 Prec=0.5477 Rec=0.9349 MCC=0.1573 G-mean=0.3925
+  Saved to /home/liyang/BioJiaheWang/RARECELL/benchmark/results/real/scRareGCR/GSE194122_Bench3/ (1366s)
